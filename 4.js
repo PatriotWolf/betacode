@@ -20,7 +20,7 @@ const Button = styled.button`
     background: #fff;
 `;
 
-export default class Form extends React.PureComponent {
+export default class Form extends React.Component {
 
     constructor () {
       super();
@@ -49,28 +49,33 @@ export default class Form extends React.PureComponent {
       };
     }
     
+    randomize = () => {
+        let x = Math.floor((Math.random() * 6) + 0); //day start 0 - 6
+        const randomOutcome = Object.keys(this.state)[x];
+        console.log('day obtained,',randomOutcome)
+        this.setState(prevState => {
+            Object.keys(prevState).map(x=>{
+                prevState[x].isBooked=false;
+            })
+            prevState[randomOutcome].isBooked=true;
+            return (prevState)
+        })
+    }
     
     render () {
         const day = Object.keys(this.state);
-        console.log(day);
-      return (<div>
-        <Container>
-            {day.map(x=>
-                <DayContainer primary={this.state[x].isBooked}>{x}</DayContainer>
-            )}
-            
-        </Container>
-        <Button onClick={()=>{
-            let x = Math.floor((Math.random() * 6) + 0); //day start 0 - 6
-            const randomOutcome = Object.keys(this.state)[x];
-
-            this.setState(prevState => {
-                prevState = _.mapValues(prevState, () => false);
-                prevState[randomOutcome].isBooked=true;
-                return ({prevState})
-            })
-        }}>Randomize Booking</Button> <br/>
-        {JSON.stringify(this.state)}
+        return (
+        <div>
+            <Container>
+                {day.map(x=>
+                    <DayContainer primary={this.state[x].isBooked}>{x}</DayContainer>
+                )}
+                
+            </Container>
+            <Button onClick={()=>{
+                this.randomize();
+            }}>Randomize Booking</Button> <br/>
+            {JSON.stringify(this.state)}
         </div>
       );
     }
